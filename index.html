@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tom Dennis - Content Marketing Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #4b9beb;
+            --accent-green: #20B085;
+            --accent-orange: #CC5500;
+            --dark-grey: #4A4A4A;
+            --light-grey: #F7F7F7;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Albert Sans', 'Avenir', 'Montserrat', sans-serif;
+            color: var(--dark-grey);
+            background: var(--white);
+            overflow-x: hidden;
+        }
+
+        .presentation-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            padding: 80px 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Title Slide */
+        .title-slide {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #3a8bd8 100%);
+            color: var(--white);
+        }
+
+        .title-slide h1 {
+            font-size: 4rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            line-height: 1.1;
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .headshot {
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem auto;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .contact-footer {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        /* Section Headers */
+        .section-header {
+            background: var(--light-grey);
+            text-align: center;
+        }
+
+        .section-header h1 {
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 2rem;
+            letter-spacing: -2px;
+        }
+
+        .section-header .subtitle {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .highlights {
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .highlights ul {
+            list-style: none;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .highlights li {
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .highlights li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .highlight-metric {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        /* About Slide */
+        .about-slide .slide-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 80px;
+            align-items: center;
+            text-align: left;
+        }
+
+        .about-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 3rem;
+        }
+
+        .stats-visual {
+            width: 300px;
+            height: 300px;
+            background: var(--light-grey);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            color: var(--dark-grey);
+        }
+
+        /* Project Slides */
+        .project-slide .slide-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            text-align: left;
+        }
+
+        .project-slide.reverse .slide-content {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .project-slide.reverse .project-text {
+            order: 2;
+        }
+
+        .project-slide.reverse .project-images {
+            order: 1;
+        }
+
+        .project-text h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .project-text p {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .results {
+            background: var(--light-grey);
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .results h4 {
+            color: var(--accent-green);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .results p {
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+
+        .project-images {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .image-placeholder {
+            background: var(--light-grey);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            color: var(--dark-grey);
+            font-size: 1rem;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+        }
+
+        .content-collage {
+            width: 100%;
+            height: 400px;
+            background: var(--light-grey);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Contact Slide */
+        .contact-slide {
+            background: linear-gradient(135deg, var(--dark-grey) 0%, #2a2a2a 100%);
+            color: var(--white);
+        }
+
+        .contact-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 3rem;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 3rem;
+        }
+
+        .contact-item {
+            text-align: center;
+        }
+
+        .contact-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary-blue);
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(75, 155, 235, 0.3);
+        }
+
+        .nav-btn:hover {
+            background: #3a8bd8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(75, 155, 235, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .slide {
+                padding: 60px 80px;
+            }
+            
+            .project-slide .slide-content,
+            .about-slide .slide-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+            
+            .title-slide h1 {
+                font-size: 3rem;
+            }
+            
+            .section-header h1 {
+                font-size: 4rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 40px;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .title-slide .subtitle {
+                font-size: 1.4rem;
+            }
+            
+            .section-header h1 {
+                font-size: 3rem;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide active">
+            <div class="slide-content">
+                <h1>Tom Dennis</h1>
+                <div class="subtitle">Content, Campaigns & Brand Marketing Portfolio</div>
+                <div class="headshot">Professional Headshot Placeholder</div>
+                <p style="font-size: 1.2rem; margin-top: 2rem;">Content Strategist & Marketing Leader: turning storytelling into audience growth, commercial impact and product adoption.</p>
+                <div class="contact-footer">
+                    Contact: email@example.com | LinkedIn Profile
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: About Me -->
+        <div class="slide about-slide">
+            <div class="slide-content">
+                <div>
+                    <h1>About Me / Quick Stats</h1>
+                    <div class="highlights">
+                        <ul>
+                            <li><strong>Strengths:</strong> content creation, editorial leadership, GTM, copywriting, productisation</li>
+                            <li><strong>Notable impact:</strong>
+                                <ul style="margin-top: 1rem; padding-left: 20px;">
+                                    <li><span class="highlight-metric">12% YoY increase</span> in conversion rates (Adobe, GenAI/GenStudio)</li>
+                                    <li><span class="highlight-metric">+300% growth</span> in owned platforms (English Heritage)</li>
+                                    <li><span class="highlight-metric">£4.8M revenue</span> (Future plc, T3 & product launches)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="stats-visual">
+                    Stats & Impact Icons Placeholder
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Content Section Header -->
+        <div class="slide section-header">
+            <div class="slide-content">
+                <h1>CONTENT</h1>
+                <div class="subtitle">I build editorial franchises that connect with audiences across platforms, turning high-level strategy into engaging content series.</div>
+                <div class="highlights">
+                    <ul>
+                        <li><strong>YouTube & Video:</strong> Drove <span class="highlight-metric">+300% platform growth</span> and unlocked new monetisation revenue</li>
+                        <li><strong>Podcasts & Audio:</strong> Expanded SEO reach and created new membership acquisition channels</li>
+                        <li><strong>Social Media Growth:</strong> Delivered a <span class="highlight-metric">+300% audience increase</span> on owned platforms in 24 months</li>
+                        <li><strong>Long-form & Editorial:</strong> Increased conversion rates by <span class="highlight-metric">+12%</span> and AQL→MQL pipeline by <span class="highlight-metric">+15%</span></li>
+                        <li><strong>Magazine & Brand Publishing:</strong> Led editorial products generating <span class="highlight-metric">£4.8M in revenue</span></li>
+                    </ul>
+                </div>
+                <div class="content-collage">
+                    Content Examples Collage Placeholder
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: English Heritage YouTube -->
+        <div class="slide project-slide">
+            <div class="slide-content">
+                <div class="project-text">
+                    <h2>English Heritage<br>"The Victorian Way"</h2>
+                    <p>I led strategy for the YouTube franchise, turning Victorian cooking into a digital phenomenon.</p>
+                    <div class="results">
+                        <h4>Results</h4>
+                        <p>+300% platform growth in 24 months; award recognition; YouTube monetisation revenue.</p>
+                    </div>
+                </div>
+                <div class="project-images">
+                    <div class="image-placeholder">
+                        YouTube Thumbnail Placeholder
+                    </div>
+                    <div class="image-placeholder">
+                        Landing Page Screenshot Placeholder
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: English Heritage Podcasts -->
+        <div class="slide project-slide reverse">
+            <div class="slide-content">
+                <div class="project-text">
+                    <h2>Podcasts & Audio Expansion</h2>
+                    <p>Commissioned and produced heritage podcasts to extend engagement.</p>
+                    <div class="results">
+                        <h4>Results</h4>
+                        <p>Expanded time-on-site, SEO reach, new channel for memberships.</p>
+                    </div>
+                </div>
+                <div class="project-images">
+                    <div class="image-placeholder">
+                        Podcast Hub Placeholder
+                    </div>
+                    <div class="image-placeholder">
+                        Episode Embed Placeholder
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Adobe DX -->
+        <div class="slide project-slide">
+            <div class="slide-content">
+                <div class="project-text">
+                    <h2>Adobe DX / GenStudio<br>Thought Leadership</h2>
+                    <p>Created white papers, webinars & landing pages turning technical capabilities into business impact.</p>
+                    <div class="results">
+                        <h4>Results</h4>
+                        <p>+12% conversion rates; +15% AQL→MQL pipeline growth.</p>
+                    </div>
+                </div>
+                <div class="project-images">
+                    <div class="image-placeholder">
+                        Product Page Placeholder
+                    </div>
+                    <div class="image-placeholder">
+                        Webinar Landing Page Placeholder
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Future plc T3 -->
+        <div class="slide project-slide reverse">
+            <div class="slide-content">
+                <div class="project-text">
+                    <h2>Future plc<br>T3 Editorial & Product Leadership</h2>
+                    <p>Relaunched T3 across print, apps & video; tied editorial to commerce and subscription flows.</p>
+                    <div class="results">
+                        <h4>Results</h4>
+                        <p>£4.8M revenue across Technology & Creative group; 100k likes, 12k subs in 6 weeks (Photography Week).</p>
+                    </div>
+                </div>
+                <div class="project-images">
+                    <div class="image-placeholder">
+                        T3 Magazine Cover Placeholder
+                    </div>
+                    <div class="image-placeholder">
+                        App Mockup Placeholder
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Campaigns Section Header -->
+        <div class="slide section-header">
+            <div class="slide-content">
+                <h1>CAMPAIGNS</h1>
+                <div class="subtitle">Creative, award-winning campaigns across multiple platforms.</div>
+                <div class="content-collage">
+                    Campaign Visuals Collage Placeholder
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: YouTube Works Campaign -->
+        <div class="slide project-slide">
+            <div class="slide-content">
+                <div class="project-text">
+                    <h2>Cross-Platform Campaigns</h2>
+                    <p>Architected YouTube + paid + editorial flows; campaigns won YouTube Works recognition.</p>
+                    <div class="results">
+                        <h4>Results</h4>
+                        <p>High reach, engagement, award recognition.</p>
+                    </div>
+                </div>
+                <div class="project-images">
+                    <div class="image-placeholder">
+                        Award Press Clipping Placeholder
+                    </div>
+                    <div class="image-placeholder">
+                        Campaign Still Placeholder
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Dyson & SPA HAUS -->
+        <div class="slide project-slide reverse">
+            <div class="slide-content">
+                <div class="project-text">
+                    <h2>Dyson Farming & SPA HAUS</h2>
+                    <p><strong>Dyson:</strong> Reframed membership tiers for scale, built campaign blueprints.</p>
+                    <p><strong>SPA HAUS:</strong> Produced investor deck & brochure, set up pre-launch marketing narrative.</p>
+                    <div class="results">
+                        <h4>Results</h4>
+                        <p>Low-cost acquisition model (Dyson); investor-ready collateral (SPA HAUS).</p>
+                    </div>
+                </div>
+                <div class="project-images">
+                    <div class="image-placeholder">
+                        Membership Mockup Placeholder
+                    </div>
+                    <div class="image-placeholder">
+                        Sauna Rendering Placeholder
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Consultancy -->
+        <div class="slide project-slide">
+            <div class="slide-content">
+                <div class="project-text">
+                    <h2>Consultancy & Marketing Systems</h2>
+                    <p>Delivered GTM playbooks, Notion templates, content engines, and CRO frameworks. At Adobe, operationalised content supply chains with GenStudio.</p>
+                    <div class="results">
+                        <h4>Results</h4>
+                        <p>Repeatable GTM frameworks; scaled personalised creative.</p>
+                    </div>
+                </div>
+                <div class="project-images">
+                    <div class="image-placeholder">
+                        SimpleAi Branding Placeholder
+                    </div>
+                    <div class="image-placeholder">
+                        GenStudio Workflow Diagram Placeholder
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Contact -->
+        <div class="slide contact-slide">
+            <div class="slide-content">
+                <h1>Let's talk — next steps</h1>
+                <div class="highlights">
+                    <ul>
+                        <li>Download CV (link)</li>
+                        <li>Case study PDFs available</li>
+                        <li>Contact info: email + LinkedIn</li>
+                    </ul>
+                </div>
+                <div class="contact-grid">
+                    <div class="contact-item">
+                        <div class="contact-icon">LinkedIn Icon</div>
+                        <p>LinkedIn Profile</p>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">Email Icon</div>
+                        <p>Email Address</p>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">CV Icon</div>
+                        <p>Download CV</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" onclick="previousSlide()">‹</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">›</button>
+    </div>
+    
+    <div class="slide-counter">
+        <span id="currentSlide">1</span> / <span id="totalSlides">12</span>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'prev');
+                if (i === index) {
+                    slide.classList.add('active');
+                } else if (i < index) {
+                    slide.classList.add('prev');
+                }
+            });
+            
+            document.getElementById('currentSlide').textContent = index + 1;
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides - 1) {
+                currentSlideIndex++;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
